@@ -1,0 +1,11 @@
+- name: Download cfssl
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/cfssl"
+    dest: /usr/local/bin/cfssl
+    mode: 0755
+
+- name: Download cfssljson
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-the-hard-way/cfssl/{{ cfssl_version }}/linux/cfssljson"
+    dest: /usr/local/bin/cfssljson
+    mode: 0755

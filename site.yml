@@ -1,0 +1,19 @@
+- hosts: k8s_masters[0]
+  become: yes
+  roles:
+    - cfssl
+    - kubectl
+    - ca-gen
+  tasks:
+    - command: cfssl version
+      register: cfssl_check
+    - debug:
+        msg: "{{ cfssl_check.stdout }}"
+    - command: cfssljson --version
+      register: cfssljson_check
+    - debug:
+        msg: "{{ cfssljson_check.stdout }}"
+    - command: kubectl version --client
+      register: kubectl_check
+    - debug:
+        msg: "{{ kubectl_check.stdout }}"
