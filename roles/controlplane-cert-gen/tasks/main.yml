@@ -1,0 +1,41 @@
+- name: Create /etc/kubernetes/pki dir
+  file:
+    path: /etc/kubernetes/pki
+    state: directory
+
+- name: Copy controlplane CSR configs
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/kubernetes/pki/{{ item }}"
+  loop:
+    - kube-controller-manager-csr.json
+    - kube-scheduler-csr.json
+    - kubernetes-csr.json
+
+- name: Generate kube-controller-manager cert and key
+  shell:
+    cmd: >
+      cfssl gencert -ca=ca.pem -ca-key=ca-key.pem 
+      -config=ca-config.json -profile=kubernetes
+      kube-controller-manager-csr.json | cfssljson -bare kube-controller-manager
+    chdir: /etc/kubernetes/pki
+    creates: /etc/kubernetes/pki/kube-controller-manager.pem
+
+- name: Generate kube-scheduler cert and key
+  shell:
+    cmd: >
+      cfssl gencert -ca=ca.pem -ca-key=ca-key.pem
+      -config=ca-config.json -profile=kubernetes 
+      kube-scheduler-csr.json | cfssljson -bare kube-scheduler
+    chdir: /etc/kubernetes/pki
+    creates: /etc/kubernetes/pki/kube-scheduler.pem
+
+- name: Generate kube-api-server cert and key
+  shell:
+    cmd: >
+      cfssl gencert -ca=ca.pem -ca-key=ca-key.pem
+      -config=ca-config.json
+      "-hostname={{ ansible_default_ipv4.address }},{{ ansible_hostname }}"
+      -profile=kubernetes kubernetes-csr.json | cfssljson -bare kubernetes
+    chdir: /etc/kubernetes/pki
+    creates: /etc/kubernetes/pki/kubernetes.pem

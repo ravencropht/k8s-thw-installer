@@ -3,7 +3,7 @@
     path: /etc/kubernetes/pki
     state: directory
 
-- name: Copy CA configs
+- name: Copy CSR config for admin
   template:
     src: "{{ item }}.j2"
     dest: "/etc/kubernetes/pki/{{ item }}"

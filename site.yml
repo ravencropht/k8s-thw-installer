@@ -5,6 +5,7 @@
     - kubectl
     - ca-gen
     - admin-cert-gen
+    - controlplane-cert-gen
   tasks:
     # - command: cfssl version
     #   register: cfssl_check
