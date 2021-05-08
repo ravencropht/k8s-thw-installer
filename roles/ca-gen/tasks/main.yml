@@ -1,12 +1,12 @@
-- name: Create /etc/kubernetes/pki dir
+- name: Create /var/lib/kubernetes dir
   file:
-    path: /etc/kubernetes/pki
+    path: /var/lib/kubernetes
     state: directory
 
 - name: Copy CA configs
   template:
     src: "{{ item }}.j2"
-    dest: "/etc/kubernetes/pki/{{ item }}"
+    dest: "/var/lib/kubernetes/{{ item }}"
   loop:
     - ca-config.json
     - ca-csr.json
@@ -14,5 +14,5 @@
 - name: Generate CA cert and key
   shell:
     cmd: cfssl gencert -initca ca-csr.json | cfssljson -bare ca
-    chdir: /etc/kubernetes/pki
-    creates: /etc/kubernetes/pki/ca.pem
+    chdir: /var/lib/kubernetes
+    creates: /var/lib/kubernetes/ca.pem

@@ -1,12 +1,12 @@
-- name: Create /etc/kubernetes/pki dir
+- name: Create /var/lib/kubernetes dir
   file:
-    path: /etc/kubernetes/pki
+    path: /var/lib/kubernetes
     state: directory
 
 - name: Copy CSR config for admin
   template:
     src: "{{ item }}.j2"
-    dest: "/etc/kubernetes/pki/{{ item }}"
+    dest: "/var/lib/kubernetes/{{ item }}"
   loop:
     - admin-csr.json
 
@@ -16,5 +16,5 @@
       cfssl gencert -ca=ca.pem -ca-key=ca-key.pem
       -config=ca-config.json -profile=kubernetes 
       admin-csr.json | cfssljson -bare admin
-    chdir: /etc/kubernetes/pki
-    creates: /etc/kubernetes/pki/admin.pem
+    chdir: /var/lib/kubernetes
+    creates: /var/lib/kubernetes/admin.pem
