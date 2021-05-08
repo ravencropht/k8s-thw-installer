@@ -3,6 +3,6 @@ ca_gen_kubernetes_expiry: "87600h"
 
 ca_gen_names_c: "RU"
 ca_gen_names_l: "Moscow"
-ca_gen_names_o: "Balance Platform"
-ca_gen_names_ou: "DevOps"
+ca_gen_names_o: "Kubernetes"
+ca_gen_names_ou: "CA"
 ca_gen_names_st: "Moscow"
