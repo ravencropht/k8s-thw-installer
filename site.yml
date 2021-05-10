@@ -6,7 +6,7 @@
     - ca-gen
     - admin-cert-gen
     - controlplane-cert-gen
-    - worker-cert-gen
+    - worker-kubeconfigs-gen
   tasks:
     # - command: cfssl version
     #   register: cfssl_check

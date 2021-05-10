@@ -1,0 +1,6 @@
+ca_gen_names_c: "RU"
+ca_gen_names_l: "Moscow"
+ca_gen_names_st: "Moscow"
+k8s_loadbalancer: loadbalancerip
+k8s_cluster_name: "{{ os_project_name }}"
+os_project_name: kubernetes

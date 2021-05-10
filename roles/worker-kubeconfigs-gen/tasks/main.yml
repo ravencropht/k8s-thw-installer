@@ -1,0 +1,103 @@
+- name: Create /var/lib/kubernetes dir
+  file:
+    path: /var/lib/kubernetes
+    state: directory
+
+- name: Copy kube-proxy CSR config
+  template:
+    src: "{{ item }}.j2"
+    dest: "/var/lib/kubernetes/{{ item }}"
+  loop:
+    - kube-proxy-csr.json
+
+- name: Copy kubelet CSR config
+  template:
+    src: "{{ item }}.j2"
+    dest: "/var/lib/kubernetes/{{ ansible_hostname }}-csr.json"
+  loop:
+    - kubelet-csr.json
+
+- name: Generate kube-proxy cert and key
+  shell:
+    cmd: >
+      cfssl gencert -ca=ca.pem -ca-key=ca-key.pem
+      -config=ca-config.json -profile=kubernetes
+      kube-proxy-csr.json | cfssljson -bare kube-proxy
+    chdir: /var/lib/kubernetes
+    creates: /var/lib/kubernetes/kube-proxy.pem
+  register: kube_proxy_cert
+
+- name: Generate kubelet cert and key
+  shell:
+    cmd: >
+      cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json 
+      -hostname={{ ansible_hostname }},{{ ansible_default_ipv4.address }} -profile=kubernetes
+      {{ ansible_hostname }}-csr.json | cfssljson -bare {{ ansible_hostname }}
+    chdir: /var/lib/kubernetes
+    creates: "/var/lib/kubernetes/{{ ansible_hostname }}.pem"
+  register: kubelet_cert
+
+- name: Ganerate kubelet kubeconfig. Step 1
+  command:
+    cmd: >
+      kubectl config set-cluster {{ k8s_cluster_name }} --certificate-authority=ca.pem
+      --embed-certs=true --server=https://{{ k8s_loadbalancer }}:6443
+      --kubeconfig={{ ansible_hostname }}.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: kubelet_cert is changed
+
+- name: Ganerate kubelet kubeconfig. Step 2
+  command:
+    cmd: >
+      kubectl config set-credentials system:node:{{ ansible_hostname }}
+      --client-certificate={{ ansible_hostname }}.pem
+      --client-key={{ ansible_hostname }}-key.pem
+      --embed-certs=true --kubeconfig={{ ansible_hostname }}.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: kubelet_cert is changed
+
+- name: Ganerate kubelet kubeconfig. Step 3
+  command:
+    cmd: >
+      kubectl config set-context default --cluster={{ k8s_cluster_name }}
+      --user=system:node:{{ ansible_hostname }}
+      --kubeconfig={{ ansible_hostname }}.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: kubelet_cert is changed
+
+- name: Ganerate kubelet kubeconfig. Step 4
+  command:
+    cmd: kubectl config use-context default --kubeconfig={{ ansible_hostname }}.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: kubelet_cert is changed
+
+- name: Ganerate kube-proxy kubeconfig. Step 1
+  command:
+    cmd: >
+      kubectl config set-cluster {{ k8s_cluster_name }} --certificate-authority=ca.pem 
+      --embed-certs=true --server=https://{{ k8s_loadbalancer }}:6443 
+      --kubeconfig=kube-proxy.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: kube_proxy_cert is changed
+
+- name: Ganerate kube-proxy kubeconfig. Step 2
+  command:
+    cmd: >
+      kubectl config set-credentials system:kube-proxy --client-certificate=kube-proxy.pem
+      --client-key=kube-proxy-key.pem --embed-certs=true --kubeconfig=kube-proxy.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: kube_proxy_cert is changed
+
+- name: Ganerate kube-proxy kubeconfig. Step 3
+  command:
+    cmd: >
+      kubectl config set-context default --cluster={{ k8s_cluster_name }}
+      --user=system:kube-proxy --kubeconfig=kube-proxy.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: kube_proxy_cert is changed
+
+- name: Ganerate kube-proxy kubeconfig. Step 4
+  command:
+    cmd: kubectl config use-context default --kubeconfig=kube-proxy.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: kube_proxy_cert is changed

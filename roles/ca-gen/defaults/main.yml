@@ -1,5 +1,5 @@
-ca_gen_ca_expiry: "87600h"
-ca_gen_kubernetes_expiry: "87600h"
+ca_gen_ca_expiry: "876000h"
+ca_gen_kubernetes_expiry: "876000h"
 
 ca_gen_names_c: "RU"
 ca_gen_names_l: "Moscow"
