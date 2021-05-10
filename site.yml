@@ -4,8 +4,8 @@
     - cfssl
     - kubectl
     - ca-gen
-    - admin-cert-gen
-    - controlplane-cert-gen
+    - admin-kubeconfig-gen
+    - controlplane-kubeconfigs-gen
     - worker-kubeconfigs-gen
   tasks:
     # - command: cfssl version

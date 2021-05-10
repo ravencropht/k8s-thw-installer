@@ -37,7 +37,7 @@
     creates: "/var/lib/kubernetes/{{ ansible_hostname }}.pem"
   register: kubelet_cert
 
-- name: Ganerate kubelet kubeconfig. Step 1
+- name: Generate kubelet kubeconfig. Step 1
   command:
     cmd: >
       kubectl config set-cluster {{ k8s_cluster_name }} --certificate-authority=ca.pem
@@ -46,7 +46,7 @@
     chdir: /var/lib/kubernetes
   when: kubelet_cert is changed
 
-- name: Ganerate kubelet kubeconfig. Step 2
+- name: Generate kubelet kubeconfig. Step 2
   command:
     cmd: >
       kubectl config set-credentials system:node:{{ ansible_hostname }}
@@ -56,7 +56,7 @@
     chdir: /var/lib/kubernetes
   when: kubelet_cert is changed
 
-- name: Ganerate kubelet kubeconfig. Step 3
+- name: Generate kubelet kubeconfig. Step 3
   command:
     cmd: >
       kubectl config set-context default --cluster={{ k8s_cluster_name }}
@@ -65,13 +65,13 @@
     chdir: /var/lib/kubernetes
   when: kubelet_cert is changed
 
-- name: Ganerate kubelet kubeconfig. Step 4
+- name: Generate kubelet kubeconfig. Step 4
   command:
     cmd: kubectl config use-context default --kubeconfig={{ ansible_hostname }}.kubeconfig
     chdir: /var/lib/kubernetes
   when: kubelet_cert is changed
 
-- name: Ganerate kube-proxy kubeconfig. Step 1
+- name: Generate kube-proxy kubeconfig. Step 1
   command:
     cmd: >
       kubectl config set-cluster {{ k8s_cluster_name }} --certificate-authority=ca.pem 
@@ -80,7 +80,7 @@
     chdir: /var/lib/kubernetes
   when: kube_proxy_cert is changed
 
-- name: Ganerate kube-proxy kubeconfig. Step 2
+- name: Generate kube-proxy kubeconfig. Step 2
   command:
     cmd: >
       kubectl config set-credentials system:kube-proxy --client-certificate=kube-proxy.pem
@@ -88,7 +88,7 @@
     chdir: /var/lib/kubernetes
   when: kube_proxy_cert is changed
 
-- name: Ganerate kube-proxy kubeconfig. Step 3
+- name: Generate kube-proxy kubeconfig. Step 3
   command:
     cmd: >
       kubectl config set-context default --cluster={{ k8s_cluster_name }}
@@ -96,7 +96,7 @@
     chdir: /var/lib/kubernetes
   when: kube_proxy_cert is changed
 
-- name: Ganerate kube-proxy kubeconfig. Step 4
+- name: Generate kube-proxy kubeconfig. Step 4
   command:
     cmd: kubectl config use-context default --kubeconfig=kube-proxy.kubeconfig
     chdir: /var/lib/kubernetes

@@ -1,0 +1,53 @@
+- name: Create /var/lib/kubernetes dir
+  file:
+    path: /var/lib/kubernetes
+    state: directory
+
+- name: Copy CSR config for admin
+  template:
+    src: "{{ item }}.j2"
+    dest: "/var/lib/kubernetes/{{ item }}"
+  loop:
+    - admin-csr.json
+
+- name: Generate admin cert and key
+  shell:
+    cmd: >
+      cfssl gencert -ca=ca.pem -ca-key=ca-key.pem
+      -config=ca-config.json -profile=kubernetes 
+      admin-csr.json | cfssljson -bare admin
+    chdir: /var/lib/kubernetes
+    creates: /var/lib/kubernetes/admin.pem
+  register: admin_cert
+
+- name: Generate admin kubeconfig. Step 1
+  command:
+    cmd: >
+      kubectl config set-cluster {{ k8s_cluster_name }}
+      --certificate-authority=ca.pem --embed-certs=true 
+      --server=https://127.0.0.1:6443 --kubeconfig=admin.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: admin_cert is changed
+
+- name: Generate admin kubeconfig. Step 2
+  command:
+    cmd: >
+      kubectl config set-credentials admin --client-certificate=admin.pem
+      --client-key=admin-key.pem --embed-certs=true
+      --kubeconfig=admin.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: admin_cert is changed
+
+- name: Generate admin kubeconfig. Step 3
+  command:
+    cmd: >
+      kubectl config set-context default --cluster={{ k8s_cluster_name }}
+      --user=admin --kubeconfig=admin.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: admin_cert is changed
+
+- name: Generate admin kubeconfig. Step 4
+  command:
+    cmd: kubectl config use-context default --kubeconfig=admin.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: admin_cert is changed
