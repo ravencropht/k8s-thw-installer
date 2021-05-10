@@ -1,5 +1,5 @@
 {
-  "CN": "kubernetes",
+  "CN": "system:kube-scheduler",
   "key": {
     "algo": "rsa",
     "size": 2048
@@ -8,7 +8,7 @@
     {
       "C": "{{ ca_gen_names_c }}",
       "L": "{{ ca_gen_names_l }}",
-      "O": "Kubernetes",
+      "O": "system:kube-scheduler",
       "OU": "Kubernetes",
       "ST": "{{ ca_gen_names_st }}"
     }
