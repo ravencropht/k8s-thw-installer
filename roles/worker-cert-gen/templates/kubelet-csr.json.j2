@@ -1,0 +1,16 @@
+{
+  "CN": "system:node:{{ ansible_hostname }}",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "{{ ca_gen_names_c }}",
+      "L": "{{ ca_gen_names_l }}",
+      "O": "system:nodes",
+      "OU": "Kubernetes",
+      "ST": "{{ ca_gen_names_st }}"
+    }
+  ]
+}

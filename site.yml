@@ -1,11 +1,12 @@
 - hosts: k8s_masters[0]
   become: yes
   roles:
-    - cfssl
-    - kubectl
-    - ca-gen
-    - admin-cert-gen
-    - controlplane-cert-gen
+    # - cfssl
+    # - kubectl
+    # - ca-gen
+    # - admin-cert-gen
+    # - controlplane-cert-gen
+    - worker-cert-gen
   tasks:
     # - command: cfssl version
     #   register: cfssl_check

@@ -11,6 +11,7 @@
     - kube-controller-manager-csr.json
     - kube-scheduler-csr.json
     - kubernetes-csr.json
+    - service-account-csr.json
 
 - name: Generate kube-controller-manager cert and key
   shell:
