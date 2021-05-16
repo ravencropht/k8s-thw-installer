@@ -1,0 +1,42 @@
+- name: Create /etc/etcd 
+  file:
+    path: /etc/etcd
+    state: directory
+
+- name: Create /var/lib/etcd 
+  file:
+    path: /var/lib/etcd
+    state: directory
+- name: Copy CA cert
+  copy:
+    src: "/tmp/kubernetes/ca.pem"
+    dest: "/etc/etcd/ca.pem"
+    mode: 0700
+
+- name: Link CA cert and kubernetes cert and key
+  file:
+    src: "/var/lib/kubernetes/{{ item }}"
+    dest: "/etc/etcd/{{ item }}"
+    state: link
+  loop:
+    - kubernetes-key.pem
+    - kubernetes.pem
+    - ca.pem
+
+# Download ETCD
+- name: Check /usr/local/bin/etcd
+  stat:
+    path: /usr/local/bin/etcd
+  register: etcd_file
+
+- name: Download ETCD
+  unarchive:
+    src: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
+    dest: /usr/local/bin
+    remote_src: yes
+  when: not etcd_file.stat.exists or etcd_upgrade
+
+- name: Copy etcd systemd unit
+  template:
+    src: etcd.service.j2
+    dest: /etc/systemd/system/etcd.service
