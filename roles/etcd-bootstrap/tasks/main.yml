@@ -29,7 +29,7 @@
     path: /usr/local/bin/etcd
   register: etcd_file
 
-- name: Download ETCD
+- name: Download etcd
   unarchive:
     src: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
     dest: /usr/local/bin
@@ -40,3 +40,10 @@
   template:
     src: etcd.service.j2
     dest: /etc/systemd/system/etcd.service
+  notify: Restart etcd
+
+- name: Start etcd
+  systemd:
+    name: etcd
+    state: started
+    daemon_reload: yes
