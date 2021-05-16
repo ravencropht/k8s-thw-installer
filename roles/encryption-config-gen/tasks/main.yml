@@ -1,0 +1,10 @@
+- name: Check encryption-config.yaml state
+  stat:
+    path: /var/lib/kubernetes/encryption-config.yaml 
+  register: encryption_config_file
+
+- name: Generate encryption key
+  shell: "head -c 32 /dev/urandom | base64"
+  register: encryption_key
+  when: not encryption_config_file.stat.exists
+  notify: Copy encryption-config.yaml

@@ -4,3 +4,4 @@ ca_gen_names_st: "Moscow"
 k8s_loadbalancer: loadbalancerip
 k8s_cluster_name: "{{ os_project_name }}"
 os_project_name: kubernetes
+kube_api_server_hostnames: 127.0.0.1,localhost,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.svc.cluster.local

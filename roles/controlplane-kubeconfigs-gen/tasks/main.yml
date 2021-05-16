@@ -38,7 +38,7 @@
     cmd: >
       cfssl gencert -ca=ca.pem -ca-key=ca-key.pem
       -config=ca-config.json
-      -hostname={{ ansible_default_ipv4.address }},{{ ansible_hostname }},{{ k8s_loadbalancer }}
+      -hostname={{ ansible_default_ipv4.address }},{{ ansible_hostname }},{{ k8s_loadbalancer }},{{ kube_api_server_hostnames }}
       -profile=kubernetes kubernetes-csr.json | cfssljson -bare kubernetes
     chdir: /var/lib/kubernetes
     creates: /var/lib/kubernetes/kubernetes.pem
