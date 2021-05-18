@@ -1,0 +1,7 @@
+- name: Copy CA cert to master nodes
+  fetch:
+    src: "{{ k8s_local_temp_dir }}/{{ item }}"
+    dest: "/var/lib/kubernetes/{{ item }}"
+  loop:
+    - ca.pem
+    - encryption-config.yaml

@@ -1,0 +1,13 @@
+- name: Create temp dir {{ k8s_local_temp_dir }} on localhost
+  local_action:
+    file:
+      path: "{{ k8s_local_temp_dir }}"
+      state: directory
+
+- name: Fetch CA cert from master node
+  fetch:
+    src: "/var/lib/kubernetes/{{ item }}"
+    dest: "{{ k8s_local_temp_dir }}/{{ item }}"
+  loop:
+    - ca.pem
+    - encryption-config.yaml
