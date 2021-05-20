@@ -1,0 +1,26 @@
+- name: Create /var/lib/kubernetes dir
+  file:
+    path: /var/lib/kubernetes
+    state: directory
+
+- name: Copy CA cert to master nodes
+  copy:
+    src: "{{ k8s_local_temp_dir }}/{{ item }}"
+    dest: "/var/lib/kubernetes/{{ item }}"
+  loop:
+    - admin-key.pem
+    - admin.kubeconfig
+    - admin.pem
+    - ca-key.pem
+    - ca.pem
+    - encryption-config.yaml
+    - kube-controller-manager-key.pem
+    - kube-controller-manager.kubeconfig
+    - kube-controller-manager.pem
+    - kubernetes-key.pem
+    - kubernetes.pem
+    - kube-scheduler-key.pem
+    - kube-scheduler.kubeconfig
+    - kube-scheduler.pem
+    - service-account-key.pem
+    - service-account.pem

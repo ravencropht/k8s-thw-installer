@@ -6,14 +6,13 @@
     - ca-gen
     - encryption-config-gen
     - admin-kubeconfig-gen
-    - fetch-ca-certs
+    - controlplane-kubeconfigs-gen
+    - fetch-controlplane-configs
 
 - hosts: k8s_masters
   become: yes
   roles:
     - cfssl
     - kubectl
-    - copy-ca-certs
-    - admin-kubeconfig-gen
-    - controlplane-kubeconfigs-gen
+    - copy-controlplane-configs
     - etcd-bootstrap
