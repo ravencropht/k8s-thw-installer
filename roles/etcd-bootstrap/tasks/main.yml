@@ -7,11 +7,6 @@
   file:
     path: /var/lib/etcd
     state: directory
-- name: Copy CA cert
-  copy:
-    src: "/tmp/kubernetes/ca.pem"
-    dest: "/etc/etcd/ca.pem"
-    mode: 0700
 
 - name: Link CA cert and kubernetes cert and key
   file:

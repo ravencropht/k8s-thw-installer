@@ -4,19 +4,16 @@
     - cfssl
     - kubectl
     - ca-gen
+    - encryption-config-gen
+    - admin-kubeconfig-gen
+    - fetch-ca-certs
+
+- hosts: k8s_masters
+  become: yes
+  roles:
+    - cfssl
+    - kubectl
+    - copy-ca-certs
     - admin-kubeconfig-gen
     - controlplane-kubeconfigs-gen
-    - worker-kubeconfigs-gen
-  tasks:
-    # - command: cfssl version
-    #   register: cfssl_check
-    # - debug:
-    #     msg: "{{ cfssl_check.stdout }}"
-    # - command: cfssljson --version
-    #   register: cfssljson_check
-    # - debug:
-    #     msg: "{{ cfssljson_check.stdout }}"
-    # - command: kubectl version --client
-    #   register: kubectl_check
-    # - debug:
-    #     msg: "{{ kubectl_check.stdout }}"
+    - etcd-bootstrap
