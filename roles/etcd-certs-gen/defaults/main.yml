@@ -1,0 +1,7 @@
+ca_gen_names_c: "RU"
+ca_gen_names_l: "Moscow"
+ca_gen_names_st: "Moscow"
+k8s_loadbalancer: 127.0.0.1
+k8s_cluster_name: "{{ os_project_name }}"
+os_project_name: kubernetes
+etcd_server_addresses: "{% for host in groups['k8s_masters'] %}{{ hostvars[host]['inventory_hostname'] }},{{ hostvars[host]['ansible_host'] }},{% endfor %}127.0.0.1,localhost"

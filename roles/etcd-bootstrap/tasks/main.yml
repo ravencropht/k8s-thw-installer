@@ -8,14 +8,13 @@
     path: /var/lib/etcd
     state: directory
 
-- name: Link CA cert and kubernetes cert and key
-  file:
-    src: "/var/lib/kubernetes/{{ item }}"
+- name: Copy CA and ETCD keys and certs
+  copy:
+    src: "{{ k8s_local_temp_dir }}/{{ item }}"
     dest: "/etc/etcd/{{ item }}"
-    state: link
   loop:
-    - kubernetes-key.pem
-    - kubernetes.pem
+    - etcd-key.pem
+    - etcd.pem
     - ca.pem
 
 # Download ETCD

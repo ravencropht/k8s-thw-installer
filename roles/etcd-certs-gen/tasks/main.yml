@@ -1,0 +1,19 @@
+- name: Create /etc/etcd dir
+  file:
+    path: /var/lib/kubernetes
+    state: directory
+
+- name: Copy ETCD CSR configs
+  template:
+    src: "etcd-csr.json.j2"
+    dest: "/var/lib/kubernetes/etcd-csr.json"
+
+- name: Generate ETCD cert and key
+  shell:
+    cmd: >
+      cfssl gencert -ca=ca.pem -ca-key=ca-key.pem
+      -config=ca-config.json
+      -hostname={{ etcd_server_addresses }},{{ k8s_loadbalancer }}
+      -profile=kubernetes etcd-csr.json | cfssljson -bare etcd
+    chdir: /var/lib/kubernetes
+    creates: /var/lib/kubernetes/etcd.pem

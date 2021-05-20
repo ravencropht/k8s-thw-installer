@@ -2,17 +2,16 @@
   become: yes
   roles:
     - cfssl
-    - kubectl
     - ca-gen
     - encryption-config-gen
     - admin-kubeconfig-gen
     - controlplane-kubeconfigs-gen
+    - etcd-certs-gen
     - fetch-controlplane-configs
 
 - hosts: k8s_masters
   become: yes
   roles:
-    - cfssl
     - kubectl
     - copy-controlplane-configs
     - etcd-bootstrap
