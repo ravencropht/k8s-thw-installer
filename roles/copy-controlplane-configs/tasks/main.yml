@@ -13,6 +13,8 @@
     - admin.pem
     - ca-key.pem
     - ca.pem
+    - etcd-key.pem
+    - etcd.pem
     - encryption-config.yaml
     - kube-controller-manager-key.pem
     - kube-controller-manager.kubeconfig
