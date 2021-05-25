@@ -1,0 +1,17 @@
+---
+
+- name: Create the Kubernetes configuration directory
+  file:
+    path: /etc/kubernetes/config
+    state: directory
+    recurse: yes
+
+- name: Download controlplane binaries
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/v{{ kubernetes_version }}/bin/linux/amd64/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: 0755
+  loop:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
