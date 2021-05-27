@@ -1,2 +1,3 @@
 kubernetes_version:  1.21.0
 k8s_loadbalancer: 127.0.0.1
+kubernetes_upgrade: false

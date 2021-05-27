@@ -6,6 +6,26 @@
     state: directory
     recurse: yes
 
+- name: Stop controlplane services
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+  loop:
+    - kube-apiserver.service
+    - kube-controller-manager.service
+    - kube-scheduler.service
+  when: kubernetes_upgrade
+
+- name: Delete old kubernetes binaries
+  file:
+    path: "/usr/local/bin/{{ item }}"
+    state: absent
+  loop:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+  when: kubernetes_upgrade
+
 - name: Download controlplane binaries
   get_url:
     url: "https://storage.googleapis.com/kubernetes-release/release/v{{ kubernetes_version }}/bin/linux/amd64/{{ item }}"
@@ -15,3 +35,36 @@
     - kube-apiserver
     - kube-controller-manager
     - kube-scheduler
+
+- name: Copy systemd kube-controller-manager and kube-scheduler units
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+  loop:
+    - kube-controller-manager.service
+    - kube-scheduler.service
+
+- name: Copy systemd kube-apiserver unit
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ item }}"
+  loop:
+    - kube-apiserver.service
+
+- name: Copy kube-scheduller config
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/kubernetes/config/{{ item }}"
+  loop:
+    - kube-scheduler.yaml
+
+- name: Start controlplane services
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  loop:
+    - kube-apiserver.service
+    - kube-controller-manager.service
+    - kube-scheduler.service

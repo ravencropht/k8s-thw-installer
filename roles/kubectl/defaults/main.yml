@@ -1,2 +1,2 @@
 kubernetes_version:  1.21.0
-kubectl_version: "{{ kubernetes_version }}"
+kubernetes_upgrade: false

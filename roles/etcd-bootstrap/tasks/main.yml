@@ -30,6 +30,12 @@
     remote_src: yes
   when: not etcd_file.stat.exists or etcd_upgrade
 
+- name: Stop etcd
+  systemd:
+    name: etcd
+    state: stopped
+  when: etcd_upgrade
+
 - name: Install etcd
   copy:
     src: "/tmp/etcd-v{{ etcd_version }}-linux-amd64/{{ item }}"
@@ -56,4 +62,5 @@
   systemd:
     name: etcd
     state: started
+    enabled: yes
     daemon_reload: yes
