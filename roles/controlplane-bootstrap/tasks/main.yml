@@ -14,7 +14,7 @@
     - kube-apiserver.service
     - kube-controller-manager.service
     - kube-scheduler.service
-  when: kubernetes_upgrade
+  when: kubernetes_upgrade | bool
 
 - name: Delete old kubernetes binaries
   file:
@@ -24,7 +24,7 @@
     - kube-apiserver
     - kube-controller-manager
     - kube-scheduler
-  when: kubernetes_upgrade
+  when: kubernetes_upgrade | bool
 
 - name: Download controlplane binaries
   get_url:

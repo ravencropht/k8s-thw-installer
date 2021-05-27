@@ -28,13 +28,13 @@
     src: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
     dest: /tmp
     remote_src: yes
-  when: not etcd_file.stat.exists or etcd_upgrade
+  when: not etcd_file.stat.exists or ( etcd_upgrade | bool )
 
 - name: Stop etcd
   systemd:
     name: etcd
     state: stopped
-  when: etcd_upgrade
+  when: etcd_upgrade | bool
 
 - name: Install etcd
   copy:
@@ -45,7 +45,7 @@
   loop:
     - etcd
     - etcdctl
-  when: not etcd_file.stat.exists or etcd_upgrade
+  when: not etcd_file.stat.exists or ( etcd_upgrade | bool )
 
 - name: Remove tmp etcd dir
   file:

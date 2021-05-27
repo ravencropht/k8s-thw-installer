@@ -2,6 +2,7 @@
   become: yes
   roles:
     - cfssl
+    - kubectl
     - ca-gen
     - encryption-config-gen
     - admin-kubeconfig-gen
