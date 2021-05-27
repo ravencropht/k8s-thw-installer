@@ -16,3 +16,4 @@
     - kubectl
     - copy-controlplane-configs
     - etcd-bootstrap
+    - controlplane-bootstrap

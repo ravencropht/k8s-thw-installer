@@ -36,27 +36,29 @@
     - kube-controller-manager
     - kube-scheduler
 
-- name: Copy systemd kube-controller-manager and kube-scheduler units
+- name: Copy systemd kube-controller-manager unit
   copy:
-    src: "{{ item }}"
-    dest: "/etc/systemd/system/{{ item }}"
-  loop:
-    - kube-controller-manager.service
-    - kube-scheduler.service
+    src: kube-controller-manager.service
+    dest: /etc/systemd/system/kube-controller-manager.service
+  notify: Restart kube-controller-manager
+
+- name: Copy systemd kube-scheduler unit
+  copy:
+    src: kube-scheduler.service
+    dest: /etc/systemd/system/kube-scheduler.service
+  notify: Restart kube-scheduler 
 
 - name: Copy systemd kube-apiserver unit
   template:
-    src: "{{ item }}.j2"
-    dest: "/etc/systemd/system/{{ item }}"
-  loop:
-    - kube-apiserver.service
+    src: kube-apiserver.service.j2
+    dest: /etc/systemd/system/kube-apiserver.service
+  notify: Restart kube-apiserver
 
 - name: Copy kube-scheduller config
   copy:
-    src: "{{ item }}"
-    dest: "/etc/kubernetes/config/{{ item }}"
-  loop:
-    - kube-scheduler.yaml
+    src: kube-scheduler.yaml
+    dest: /etc/kubernetes/config/kube-scheduler.yaml
+  notify: Restart kube-apiserver
 
 - name: Start controlplane services
   systemd:
