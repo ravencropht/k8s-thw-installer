@@ -1,22 +1,23 @@
-- hosts: k8s_masters[0]
-  become: yes
-  roles:
-    - cfssl
-    - kubectl
-    - ca-gen
-    - encryption-config-gen
-    - admin-kubeconfig-gen
-    - controlplane-kubeconfigs-gen
-    - etcd-certs-gen
-    - fetch-controlplane-configs
+# - hosts: k8s_masters[0]
+#   become: yes
+#   roles:
+#     - cfssl
+#     - kubectl
+#     - ca-gen
+#     - encryption-config-gen
+#     - admin-kubeconfig-gen
+#     - controlplane-kubeconfigs-gen
+#     - etcd-certs-gen
+#     - fetch-controlplane-configs
 
 - hosts: k8s_masters
   become: yes
   roles:
-    - kubectl
-    - copy-controlplane-configs
-    - etcd-bootstrap
-    - controlplane-bootstrap
+    - python-packages
+#     - kubectl
+#     - copy-controlplane-configs
+#     - etcd-bootstrap
+#     - controlplane-bootstrap
 
 - hosts: k8s_masters[0]
   become: yes

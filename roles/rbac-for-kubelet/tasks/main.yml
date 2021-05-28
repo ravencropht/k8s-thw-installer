@@ -11,7 +11,7 @@
           rbac.authorization.kubernetes.io/autoupdate: "true"
         labels:
           kubernetes.io/bootstrapping: rbac-defaults
-        name: system:kube-apiserver-to-kubelet
+        name: "system:kube-apiserver-to-kubelet"
       rules:
         - apiGroups:
             - ""
@@ -36,7 +36,7 @@
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: ClusterRole
-        name: system:kube-apiserver-to-kubelet
+        name: "system:kube-apiserver-to-kubelet"
       subjects:
         - apiGroup: rbac.authorization.k8s.io
           kind: User
