@@ -70,3 +70,14 @@
     - kube-apiserver.service
     - kube-controller-manager.service
     - kube-scheduler.service
+
+- name: Create /root/.kube dir
+  file:
+    path: /root/.kube
+    state: directory
+
+- name: Link admin.kubeconfig to /root/.kube/config
+  file:
+    src: /var/lib/kubernetes/admin.kubeconfig
+    dest: /root/.kube/config
+    state: link

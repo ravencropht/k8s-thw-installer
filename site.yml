@@ -17,3 +17,9 @@
     - copy-controlplane-configs
     - etcd-bootstrap
     - controlplane-bootstrap
+
+- hosts: k8s_masters[0]
+  become: yes
+  gather_facts: no
+  roles:
+    - rbac-for-kubelet
