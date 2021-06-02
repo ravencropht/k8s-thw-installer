@@ -10,10 +10,10 @@
 #     - etcd-certs-gen
 #     - fetch-controlplane-configs
 
-- hosts: k8s_masters
-  become: yes
-  roles:
-    - python-packages
+# - hosts: k8s_masters
+#   become: yes
+#   roles:
+#     - python-packages
 #     - kubectl
 #     - copy-controlplane-configs
 #     - etcd-bootstrap
@@ -23,4 +23,5 @@
   become: yes
   gather_facts: no
   roles:
-    - rbac-for-kubelet
+    - crictl
+    # - rbac-for-kubelet

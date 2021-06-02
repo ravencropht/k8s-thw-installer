@@ -1,0 +1,26 @@
+---
+
+- name: Check /usr/local/bin/crictl
+  stat:
+    path: /usr/local/bin/crictl
+  register: crictl_file
+
+- name: Download crictl
+  unarchive:
+    src: "https://github.com/kubernetes-sigs/cri-tools/releases/download/v{{ kubernetes_version }}/crictl-v{{ kubernetes_version }}-linux-amd64.tar.gz"
+    dest: /tmp
+    remote_src: yes
+  when: not crictl_file.stat.exists or ( kubernetes_upgrade | bool )
+
+- name: Install crictl
+  copy:
+    src: "/tmp/crictl"
+    dest: "/usr/local/bin/crictl"
+    mode: "0755"
+    remote_src: yes
+  when: not crictl_file.stat.exists or ( kubernetes_upgrade | bool )
+
+- name: Remove tmp crictl dir
+  file:
+    path: "/tmp/crictl"
+    state: absent
