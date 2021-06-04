@@ -3,6 +3,15 @@
     path: /var/lib/kubernetes
     state: directory
 
+- name: Copy CA cert to worker nodes
+  copy:
+    src: "{{ k8s_local_temp_dir }}/{{ item }}"
+    dest: "/var/lib/kubernetes/{{ item }}"
+  loop:
+    - ca-config.json
+    - ca-key.pem
+    - ca.pem
+
 - name: Copy kube-proxy CSR config
   template:
     src: "{{ item }}.j2"
@@ -13,7 +22,7 @@
 - name: Copy kubelet CSR config
   template:
     src: "{{ item }}.j2"
-    dest: "/var/lib/kubernetes/{{ ansible_hostname }}-csr.json"
+    dest: "/var/lib/kubernetes/{{ item }}"
   loop:
     - kubelet-csr.json
 
@@ -32,9 +41,9 @@
     cmd: >
       cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json 
       -hostname={{ ansible_hostname }},{{ ansible_default_ipv4.address }} -profile=kubernetes
-      {{ ansible_hostname }}-csr.json | cfssljson -bare {{ ansible_hostname }}
+      kubelet-csr.json | cfssljson -bare kubelet
     chdir: /var/lib/kubernetes
-    creates: "/var/lib/kubernetes/{{ ansible_hostname }}.pem"
+    creates: "/var/lib/kubernetes/kubelet.pem"
   register: kubelet_cert
 
 - name: Generate kubelet kubeconfig. Step 1
@@ -42,7 +51,7 @@
     cmd: >
       kubectl config set-cluster {{ k8s_cluster_name }} --certificate-authority=ca.pem
       --embed-certs=true --server=https://{{ k8s_loadbalancer }}:6443
-      --kubeconfig={{ ansible_hostname }}.kubeconfig
+      --kubeconfig=kubelet.kubeconfig
     chdir: /var/lib/kubernetes
   when: kubelet_cert is changed
 
@@ -50,9 +59,9 @@
   command:
     cmd: >
       kubectl config set-credentials system:node:{{ ansible_hostname }}
-      --client-certificate={{ ansible_hostname }}.pem
-      --client-key={{ ansible_hostname }}-key.pem
-      --embed-certs=true --kubeconfig={{ ansible_hostname }}.kubeconfig
+      --client-certificate=kubelet.pem
+      --client-key=kubelet-key.pem
+      --embed-certs=true --kubeconfig=kubelet.kubeconfig
     chdir: /var/lib/kubernetes
   when: kubelet_cert is changed
 
@@ -61,13 +70,13 @@
     cmd: >
       kubectl config set-context default --cluster={{ k8s_cluster_name }}
       --user=system:node:{{ ansible_hostname }}
-      --kubeconfig={{ ansible_hostname }}.kubeconfig
+      --kubeconfig=kubelet.kubeconfig
     chdir: /var/lib/kubernetes
   when: kubelet_cert is changed
 
 - name: Generate kubelet kubeconfig. Step 4
   command:
-    cmd: kubectl config use-context default --kubeconfig={{ ansible_hostname }}.kubeconfig
+    cmd: kubectl config use-context default --kubeconfig=kubelet.kubeconfig
     chdir: /var/lib/kubernetes
   when: kubelet_cert is changed
 

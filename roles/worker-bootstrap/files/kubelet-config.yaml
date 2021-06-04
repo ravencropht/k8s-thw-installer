@@ -14,5 +14,5 @@ clusterDNS:
   - "10.32.0.10"
 resolvConf: "/run/systemd/resolve/resolv.conf"
 runtimeRequestTimeout: "15m"
-tlsCertFile: "/var/lib/kubernetes/{{ ansible_hostname }}.pem"
-tlsPrivateKeyFile: "/var/lib/kubernetes/{{ ansible_hostname }}-key.pem"
+tlsCertFile: "/var/lib/kubernetes/kubelet.pem"
+tlsPrivateKeyFile: "/var/lib/kubernetes/kubelet-key.pem"

@@ -4,3 +4,4 @@ ca_gen_names_st: "Moscow"
 k8s_loadbalancer: 127.0.0.1
 k8s_cluster_name: "{{ os_project_name }}"
 os_project_name: kubernetes
+k8s_local_temp_dir: /tmp/k8s-thw-installer

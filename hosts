@@ -8,3 +8,6 @@ k8s-master-3 ansible_host=192.168.70.13
 
 [etcd:children]
 k8s_masters
+
+[k8s_workers:children]
+k8s_masters

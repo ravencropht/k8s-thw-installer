@@ -16,6 +16,7 @@
     - admin.pem
     - ca-key.pem
     - ca.pem
+    - ca-config.json
     - etcd-key.pem
     - etcd.pem
     - encryption-config.yaml

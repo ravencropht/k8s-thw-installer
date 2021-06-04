@@ -1,0 +1,17 @@
+---
+
+- name: Restart kubelet
+  systemd: 
+    name: "{{ item }}"
+    state: started
+    daemon_reload: yes
+  loop:
+    - kubelet
+
+- name: Restart kube-proxy
+  systemd: 
+    name: "{{ item }}"
+    state: started
+    daemon_reload: yes
+  loop:
+    - kube-proxy

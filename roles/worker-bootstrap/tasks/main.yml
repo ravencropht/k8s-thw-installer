@@ -8,8 +8,6 @@
   loop:
     - /etc/cni/net.d
     - /opt/cni/bin
-    - /var/lib/kubelet
-    - /var/lib/kube-proxy
     - /var/lib/kubernetes
     - /var/run/kubernetes
 
@@ -33,6 +31,26 @@
     cache_valid_time: 3600
   when: ansible_os_family == 'RedHat'
 
+- name: Stop worker services
+  systemd: 
+    name: "{{ item }}"
+    state: stopped
+    daemon_reload: yes
+    enabled: yes
+  loop:
+    - kubelet
+    - kube-proxy
+  when: kubernetes_upgrade | bool
+
+- name: Delete old kubernetes binaries
+  file:
+    path: "/usr/local/bin/{{ item }}"
+    state: absent
+  loop:
+    - kubelet
+    - kube-proxy
+  when: kubernetes_upgrade | bool
+
 - name: Download worker binaries
   get_url:
     url: "https://storage.googleapis.com/kubernetes-release/release/v{{ kubernetes_version }}/bin/linux/amd64/{{ item }}"
@@ -45,12 +63,26 @@
 - name: Copy kubelet config
   copy:
     src: kubelet-config.yaml
-    dest: /var/lib/kubelet/kubelet-config.yaml
+    dest: /var/lib/kubernetes/kubelet-config.yaml
+  notify: Restart kubelet
 
 - name: Copy kubelet service unit
   copy:
     src: kubelet.service
     dest: /etc/systemd/system/kubelet.service
+  notify: Restart kubelet
+
+- name: Copy kube-proxy config
+  copy:
+    src: kube-proxy-config.yaml
+    dest: /var/lib/kubernetes/kube-proxy-config.yaml
+  notify: Restart kube-proxy
+
+- name: Copy kube-proxy service unit
+  copy:
+    src: kube-proxy.service
+    dest: /etc/systemd/system/kube-proxy.service
+  notify: Restart kube-proxy
 
 - name: Start worker services
   systemd: 

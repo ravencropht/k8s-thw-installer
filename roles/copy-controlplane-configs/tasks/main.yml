@@ -3,7 +3,7 @@
     path: /var/lib/kubernetes
     state: directory
 
-- name: Copy CA cert to master nodes
+- name: Copy certs to master nodes
   copy:
     src: "{{ k8s_local_temp_dir }}/{{ item }}"
     dest: "/var/lib/kubernetes/{{ item }}"
