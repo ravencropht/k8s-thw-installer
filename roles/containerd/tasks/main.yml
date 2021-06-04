@@ -1,0 +1,56 @@
+---
+
+- name: Check /usr/local/bin/containerd
+  stat:
+    path: /usr/local/bin/containerd
+  register: containerd_file
+
+- name: Download containerd
+  unarchive:
+    src: "https://github.com/containerd/containerd/releases/download/v{{ containerd_version }}/containerd-{{ containerd_version }}-linux-amd64.tar.gz"
+    dest: /tmp
+    remote_src: yes
+  when: not containerd_file.stat.exists or ( containerd_upgrade | bool )
+
+- name: Install containerd
+  copy:
+    src: "/tmp/bin/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: "0755"
+    remote_src: yes
+  loop:
+    - containerd
+    - containerd-shim
+    - containerd-shim-runc-v1
+    - containerd-shim-runc-v2
+    - ctr
+  when: not containerd_file.stat.exists or ( containerd_upgrade | bool )
+
+- name: Remove tmp containerd dir
+  file:
+    path: "/tmp/bin"
+    state: absent
+
+- name: Create containerd config dir
+  file:
+    path: /etc/containerd
+    state: directory
+
+- name: Copy containerd config
+  copy:
+    src: config.toml
+    dest: /etc/containerd/config.toml
+  notify: Restart containerd
+
+- name: Copy containerd service unit
+  copy:
+    src: containerd.service
+    dest: /etc/systemd/system/containerd.service
+  notify: Restart containerd
+
+- name: Start containerd
+  systemd:
+    name: containerd.service
+    state: started
+    daemon_reload: yes
+    enabled: yes

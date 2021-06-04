@@ -23,5 +23,6 @@
   become: yes
   gather_facts: no
   roles:
-    - crictl
+    - containerd
+    - runc
     # - rbac-for-kubelet
