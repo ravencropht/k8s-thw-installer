@@ -1,0 +1,13 @@
+---
+
+- name: Delete old runc
+  file:
+    path: /usr/local/bin/runc
+    state: absent
+  when: runc_upgrade | bool
+
+- name: Download runc
+  get_url:
+    url: "https://github.com/opencontainers/runc/releases/download/v{{ runc_version }}/runc.amd64"
+    dest: /usr/local/bin/runc
+    mode: 0755
