@@ -1,5 +1,18 @@
 ---
 
+- name: Create worker dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  loop:
+    - /etc/cni/net.d
+    - /opt/cni/bin
+    - /var/lib/kubelet
+    - /var/lib/kube-proxy
+    - /var/lib/kubernetes
+    - /var/run/kubernetes
+
 - name: Install dependencies
   apt:
     name:
@@ -20,18 +33,6 @@
     cache_valid_time: 3600
   when: ansible_os_family == 'RedHat'
 
-- name: Create directories
-  file:
-    path: "{{ item }}"
-    state: directory
-  loop:
-    - /etc/cni/net.d
-    - /opt/cni/bin
-    - /var/lib/kubelet
-    - /var/lib/kube-proxy
-    - /var/lib/kubernetes
-    - /var/run/kubernetes
-
 - name: Download worker binaries
   get_url:
     url: "https://storage.googleapis.com/kubernetes-release/release/v{{ kubernetes_version }}/bin/linux/amd64/{{ item }}"
@@ -40,3 +41,23 @@
   loop:
     - kube-proxy
     - kubelet
+
+- name: Copy kubelet config
+  copy:
+    src: kubelet-config.yaml
+    dest: /var/lib/kubelet/kubelet-config.yaml
+
+- name: Copy kubelet service unit
+  copy:
+    src: kubelet.service
+    dest: /etc/systemd/system/kubelet.service
+
+- name: Start worker services
+  systemd: 
+    name: "{{ item }}"
+    state: started
+    daemon_reload: yes
+    enabled: yes
+  loop:
+    - kubelet
+    - kube-proxy
