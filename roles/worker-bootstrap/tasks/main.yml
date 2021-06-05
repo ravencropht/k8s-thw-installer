@@ -61,8 +61,8 @@
     - kubelet
 
 - name: Copy kubelet config
-  copy:
-    src: kubelet-config.yaml
+  template:
+    src: kubelet-config.yaml.j2
     dest: /var/lib/kubernetes/kubelet-config.yaml
   notify: Restart kubelet
 
