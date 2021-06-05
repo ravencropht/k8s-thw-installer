@@ -13,6 +13,7 @@
 - hosts: k8s_masters
   become: yes
   roles:
+    - etc-hosts-config
     - python-packages
     - kubectl
     - copy-controlplane-configs
@@ -28,6 +29,7 @@
 - hosts: k8s_workers
   become: yes
   roles:
+    - etc-hosts-config
     - cfssl
     - crictl
     - kubectl

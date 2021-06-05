@@ -4,5 +4,5 @@ ca_gen_names_st: "Moscow"
 k8s_loadbalancer: 127.0.0.1
 k8s_cluster_name: "{{ os_project_name }}"
 os_project_name: kubernetes
-kube_api_server_hostnames: 127.0.0.1,localhost,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.svc.cluster.local
+kube_api_server_hostnames: 127.0.0.1,localhost,10.32.0.1,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.svc.cluster.local
 kube_api_server_addresses: "{% for host in groups['k8s_masters'] %}{{ hostvars[host]['inventory_hostname'] }},{{ hostvars[host]['ansible_host'] }}{% if not loop.last %},{% endif %}{% endfor %}"

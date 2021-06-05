@@ -1,0 +1,8 @@
+---
+
+- name: Add cluster nodes to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: "^{{ hostvars[item]['ansible_host'] }}"
+    line: "{{ hostvars[item]['ansible_host'] }} {{ item }}"
+  loop: "{{ groups['all'] }}"
