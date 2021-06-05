@@ -1,9 +1,9 @@
 - name: Download flannel manifest
   get_url:
     url: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-    dest: /var/lib/kubernetes/flannel.yml
+    dest: /var/lib/kubernetes/flannel.yaml
 
 - name: Apply flannel manifest to the cluster.
   k8s:
-    src: /var/lib/kubernetes/flannel.yml
+    src: /var/lib/kubernetes/flannel.yaml
     state: present
