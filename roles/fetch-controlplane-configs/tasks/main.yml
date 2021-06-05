@@ -28,5 +28,6 @@
     - kube-scheduler-key.pem
     - kube-scheduler.kubeconfig
     - kube-scheduler.pem
+    - remote.kubeconfig
     - service-account-key.pem
     - service-account.pem

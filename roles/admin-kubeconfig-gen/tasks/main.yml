@@ -51,3 +51,37 @@
     cmd: kubectl config use-context default --kubeconfig=admin.kubeconfig
     chdir: /var/lib/kubernetes
   when: admin_cert is changed
+
+- name: Generate remote kubeconfig. Step 1
+  command:
+    cmd: >
+      kubectl config set-cluster {{ k8s_cluster_name }}
+      --certificate-authority=ca.pem
+      --embed-certs=true
+      --server=https://{{ k8s_loadbalancer }}:6443
+      --kubeconfig=remote.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: admin_cert is changed
+
+- name: Generate remote kubeconfig. Step 2
+  command:
+    cmd: >
+      kubectl config set-credentials admin --client-certificate=admin.pem
+      --client-key=admin-key.pem --embed-certs=true
+      --kubeconfig=remote.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: admin_cert is changed
+
+- name: Generate remote kubeconfig. Step 3
+  command:
+    cmd: >
+      kubectl config set-context default --cluster={{ k8s_cluster_name }}
+      --user=admin --kubeconfig=remote.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: admin_cert is changed
+
+- name: Generate remote kubeconfig. Step 4
+  command:
+    cmd: kubectl config use-context default --kubeconfig=remote.kubeconfig
+    chdir: /var/lib/kubernetes
+  when: admin_cert is changed
