@@ -1,6 +1,6 @@
-- name: Download flannel manifest
-  get_url:
-    url: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+- name: Copy flannel manifest
+  template:
+    src: flannel.yaml.j2
     dest: /var/lib/kubernetes/flannel.yaml
 
 - name: Apply flannel manifest to the cluster.
