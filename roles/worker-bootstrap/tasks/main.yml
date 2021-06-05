@@ -7,7 +7,6 @@
     recurse: yes
   loop:
     - /etc/cni/net.d
-    - /opt/cni/bin
     - /var/lib/kubernetes
     - /var/run/kubernetes
 
@@ -59,6 +58,11 @@
   loop:
     - kube-proxy
     - kubelet
+
+# - name: Copy 10-bridge.conf
+#   template:
+#     src: 10-bridge.conf.j2
+#     dest: /etc/cni/net.d/10-bridge.conf
 
 - name: Copy kubelet config
   template:

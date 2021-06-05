@@ -14,11 +14,11 @@
   become: yes
   roles:
     - etc-hosts-config
-    - python-packages
-    - kubectl
     - copy-controlplane-configs
     - etcd-bootstrap
+    - kubectl
     - controlplane-bootstrap
+    - python-packages
 
 - hosts: k8s_masters[0]
   become: yes
@@ -33,6 +33,7 @@
     - crictl
     - kubectl
     - runc
+    - cni-plugins
     - containerd
     - worker-kubeconfigs-gen
     - worker-bootstrap

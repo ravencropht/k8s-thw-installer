@@ -3,6 +3,8 @@
 - name: Create the system:kube-apiserver-to-kubelet ClusterRole
   k8s:
     state: present
+    apply: yes
+    wait: yes
     definition:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRole
@@ -27,6 +29,8 @@
 - name: Bind the system:kube-apiserver-to-kubelet ClusterRole to the kubernetes user
   k8s:
     state: present
+    apply: yes
+    wait: yes
     definition:
       apiVersion: rbac.authorization.k8s.io/v1
       kind: ClusterRoleBinding
