@@ -1,0 +1,18 @@
+---
+
+- name: Create CNI bin directory
+  file:
+    path: /opt/cni/bin
+    state: directory
+    
+- name: Check /opt/cni/bin/bridge
+  stat:
+    path: /opt/cni/bin/bridge
+  register: bridge_file
+
+- name: Download cni-plugins
+  unarchive:
+    src: "https://github.com/containernetworking/plugins/releases/download/v{{ cni_plugins_version }}/cni-plugins-linux-amd64-v{{ cni_plugins_version }}.tgz"
+    dest: /opt/cni/bin
+    remote_src: yes
+  when: not bridge_file.stat.exists or ( cni_plugins_upgrade | bool )
