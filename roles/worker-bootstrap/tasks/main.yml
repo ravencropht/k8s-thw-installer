@@ -8,7 +8,6 @@
   loop:
     - /etc/cni/net.d
     - /var/lib/kubernetes
-    - /var/run/kubernetes
 
 - name: Install dependencies
   apt:
