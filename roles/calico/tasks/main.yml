@@ -1,0 +1,9 @@
+- name: Copy calico manifest
+  copy:
+    src: calico.yaml
+    dest: /var/lib/kubernetes/calico.yaml
+
+- name: Apply calico manifest to the cluster.
+  k8s:
+    src: /var/lib/kubernetes/calico.yaml
+    state: present

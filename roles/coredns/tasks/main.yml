@@ -1,6 +1,6 @@
-- name: Download coredns manifest
-  get_url:
-    url: "https://storage.googleapis.com/kubernetes-the-hard-way/coredns-{{ coredns_version }}.yaml"
+- name: Copy CoreDNS manifest
+  copy:
+    src: coredns.yaml
     dest: /var/lib/kubernetes/coredns.yaml
 
 - name: Apply coredns manifest to the cluster.
