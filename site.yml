@@ -41,3 +41,4 @@
     - rbac-for-kubelet
     - coredns
     - calico
+    - "{{ ingress_controller }}_ingress_controller"
