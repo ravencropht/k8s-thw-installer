@@ -2,9 +2,10 @@
 - name: Download Nginx ingress controller manifest
   get_url:
     url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v{{ nginx_ingress_version }}/deploy/static/provider/{{ nginx_ingress_provider }}/deploy.yaml"
-    dest: /tmp/nginx_ingress_controller.yaml
+    dest: /var/lib/kubernetes/nginx_ingress_controller.yaml
+    mode: '0664'
 
 - name: Apply Nginx ingress controller manifest
-  community.kubernetes.k8s:
+  k8s:
     state: present
-    src: /tmp/nginx_ingress_controller.yaml
+    src: /var/lib/kubernetes/nginx_ingress_controller.yaml

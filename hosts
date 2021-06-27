@@ -1,6 +1,8 @@
 [all:vars]
-ingress_controller: nginx                   # or none
-nginx_ingress_provider: baremetal           # cloud, aws. nginx specific variable.
+# ingress_controller could be nginx or none
+ingress_controller=nginx                   
+# nginx_ingress_provider could be baremetal, cloud or aws. nginx specific variable.
+nginx_ingress_provider=baremetal           
 ansible_interpreter=/usr/bin/python3
 
 [all:children]

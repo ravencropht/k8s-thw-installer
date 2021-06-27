@@ -1,37 +1,37 @@
-- hosts: k8s_masters[0]
-  become: yes
-  roles:
-    - cfssl
-    - kubectl
-    - ca-gen
-    - encryption-config-gen
-    - admin-kubeconfig-gen
-    - controlplane-kubeconfigs-gen
-    - etcd-certs-gen
-    - fetch-controlplane-configs
+# - hosts: k8s_masters[0]
+#   become: yes
+#   roles:
+#     - cfssl
+#     - kubectl
+#     - ca-gen
+#     - encryption-config-gen
+#     - admin-kubeconfig-gen
+#     - controlplane-kubeconfigs-gen
+#     - etcd-certs-gen
+#     - fetch-controlplane-configs
 
-- hosts: k8s_masters
-  become: yes
-  roles:
-    - etc-hosts-config
-    - copy-controlplane-configs
-    - etcd-bootstrap
-    - controlplane-bootstrap
-    - python-packages
-    - kubectl
+# - hosts: k8s_masters
+#   become: yes
+#   roles:
+#     - etc-hosts-config
+#     - copy-controlplane-configs
+#     - etcd-bootstrap
+#     - controlplane-bootstrap
+#     - python-packages
+#     - kubectl
 
-- hosts: k8s_workers
-  become: yes
-  roles:
-    - etc-hosts-config
-    - cfssl
-    - crictl
-    - kubectl
-    - runc
-    - cni-plugins
-    - containerd
-    - worker-kubeconfigs-gen
-    - worker-bootstrap
+# - hosts: k8s_workers
+#   become: yes
+#   roles:
+#     - etc-hosts-config
+#     - cfssl
+#     - crictl
+#     - kubectl
+#     - runc
+#     - cni-plugins
+#     - containerd
+#     - worker-kubeconfigs-gen
+#     - worker-bootstrap
  
 - hosts: k8s_masters[0]
   become: yes
@@ -41,4 +41,7 @@
     - rbac-for-kubelet
     - coredns
     - calico
-    - "{{ ingress_controller }}_ingress_controller"
+  tasks:
+    - name: Install Ingress Controller
+      include_role:
+        name: "{{ ingress_controller }}_ingress_controller"
