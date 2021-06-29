@@ -8,5 +8,4 @@
 - name: Apply Nginx ingress controller manifest
   k8s:
     state: present
-    apply: yes
     src: /var/lib/kubernetes/nginx_ingress_controller.yaml
