@@ -45,15 +45,16 @@
       include_role:
         name: coredns
 
-    - name: Install CNI
-      include_role:
-        name: "{{ cni }}"
-
-    - name: Install Metrics-server
-      include_role:
-        name: metrics-server
+# Doesn't work yet
+    # - name: Install Metrics-server
+    #   include_role:
+    #     name: metrics-server
 
     - name: Install Ingress Controller
       include_role:
         name: "{{ ingress_controller }}_ingress_controller"
       when: install_ingress_controller | bool
+
+    - name: Install CNI
+      include_role:
+        name: "{{ cni }}"
