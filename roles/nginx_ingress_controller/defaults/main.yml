@@ -1,2 +1,2 @@
 nginx_ingress_version: 0.47.0
-nginx_ingress_provider: baremetal           # cloud, aws. nginx specific variable.
+nginx_ingress_provider: baremetal           # baremetal or cloud. nginx specific variable.

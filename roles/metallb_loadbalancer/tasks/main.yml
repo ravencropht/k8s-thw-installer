@@ -1,0 +1,34 @@
+---
+- name: Download MetalLB manifests
+  get_url:
+    url: "https://raw.githubusercontent.com/metallb/metallb/v{{ metallb_version }}/manifests/{{ item }}"
+    dest: "/var/lib/kubernetes/{{ item }}"
+    mode: '0664'
+  loop:
+    - namespace.yaml
+    - metallb.yaml
+
+- name: Apply MetalLB manifests
+  k8s:
+    state: present
+    src: "/var/lib/kubernetes/{{ item }}"
+  loop:
+    - namespace.yaml
+    - metallb.yaml
+
+- name: Apply MetalLB config
+  k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        namespace: metallb-system
+        name: config
+      data:
+        config: |
+          address-pools:
+          - name: default
+            protocol: layer2
+            addresses:
+            - {{ metallb_pool }}

@@ -55,6 +55,11 @@
         name: "{{ ingress_controller }}_ingress_controller"
       when: install_ingress_controller | bool
 
+    - name: Install LoadBalancer
+      include_role:
+        name: "{{ loadbalancer }}_loadbalancer"
+      when: install_loadbalancer | bool
+
     - name: Install CNI
       include_role:
         name: "{{ cni }}"
