@@ -16,3 +16,9 @@
     cmd: cfssl gencert -initca ca-csr.json | cfssljson -bare ca
     chdir: /var/lib/kubernetes
     creates: /var/lib/kubernetes/ca.pem
+
+- name: Generate front-proxy CA cert and key
+  shell:
+    cmd: cfssl gencert -initca ca-csr.json | cfssljson -bare front-proxy-ca
+    chdir: /var/lib/kubernetes
+    creates: /var/lib/kubernetes/front-proxy-ca.pem
