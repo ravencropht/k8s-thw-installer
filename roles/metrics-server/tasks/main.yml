@@ -3,7 +3,7 @@
   get_url:
     url: "https://github.com/kubernetes-sigs/metrics-server/releases/download/v{{ metrics_server_version }}/components.yaml"
     dest: /var/lib/kubernetes/metrics-server.yaml
-    mode: '0664'
+    mode: "0644"
 
 - name: Apply Metrics-server manifest
   k8s:
