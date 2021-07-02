@@ -12,6 +12,7 @@
     - kube-scheduler-csr.json
     - kubernetes-csr.json
     - service-account-csr.json
+    - front-proxy-csr.json
 
 - name: Generate kube-controller-manager cert and key
   shell:
@@ -50,6 +51,14 @@
       -profile=kubernetes service-account-csr.json | cfssljson -bare service-account
     chdir: /var/lib/kubernetes
     creates: /var/lib/kubernetes/service-account.pem
+
+- name: Generate front-proxy cert and key
+  shell:
+    cmd: >
+      cfssl gencert -ca=front-proxy-ca.pem -ca-key=front-proxy-ca-key.pem -config=ca-config.json
+      -profile=kubernetes front-proxy-csr.json | cfssljson -bare front-proxy
+    chdir: /var/lib/kubernetes
+    creates: /var/lib/kubernetes/front-proxy.pem
 
 - name: Generate kube-controller-manager kubeconfig. Step 1
   command:
