@@ -31,3 +31,6 @@
     - remote.kubeconfig
     - service-account-key.pem
     - service-account.pem
+    - front-proxy-ca.pem
+    - front-proxy.pem
+    - front-proxy-key.pem
