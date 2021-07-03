@@ -29,9 +29,9 @@
     - runc
     - cni-plugins
     - containerd
+    - kubectl
     - worker-kubeconfigs-gen
     - worker-bootstrap
-    - kubectl
  
 - hosts: k8s_masters[0]
   become: yes

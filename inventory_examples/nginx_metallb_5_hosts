@@ -1,0 +1,30 @@
+[all:vars]
+# cni could be calico (works) or flannel (doesn't work)
+cni=calico
+# loadbalancer could be metallb or octavia (openstack. doesn't work yet)
+install_loadbalancer=true
+loadbalancer=metallb
+metallb_pool=192.168.70.50-192.168.70.100
+# ingress_controller could be nginx or ...
+install_ingress_controller=true
+ingress_controller=nginx                   
+# nginx_ingress_provider could be baremetal (nodeport) or cloud. nginx specific variable.
+nginx_ingress_provider=cloud 
+ansible_interpreter=/usr/bin/python3
+
+[all:children]
+k8s_masters
+k8s_workers
+etcd
+
+[k8s_masters]
+k8s-master-1 ansible_host=192.168.70.11
+k8s-master-2 ansible_host=192.168.70.12
+k8s-master-3 ansible_host=192.168.70.13
+
+[etcd:children]
+k8s_masters
+
+[k8s_workers]
+k8s-worker-1 ansible_host=192.168.70.21
+k8s-worker-2 ansible_host=192.168.70.22

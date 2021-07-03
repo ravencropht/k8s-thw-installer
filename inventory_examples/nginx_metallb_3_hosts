@@ -21,9 +21,6 @@ etcd
 k8s-master-1 ansible_host=192.168.70.11
 k8s-master-2 ansible_host=192.168.70.12
 k8s-master-3 ansible_host=192.168.70.13
-# k8s-master-1 ansible_host=192.168.70.11 # node_public_iface=eth1
-# k8s-master-2 ansible_host=192.168.70.12 # node_public_iface=eth1
-# k8s-master-3 ansible_host=192.168.70.13 # node_public_iface=eth1
 
 [etcd:children]
 k8s_masters
