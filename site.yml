@@ -45,7 +45,6 @@
       include_role:
         name: coredns
 
-# Doesn't work yet
     - name: Install Metrics-server
       include_role:
         name: metrics-server
