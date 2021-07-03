@@ -46,9 +46,9 @@
         name: coredns
 
 # Doesn't work yet
-    # - name: Install Metrics-server
-    #   include_role:
-    #     name: metrics-server
+    - name: Install Metrics-server
+      include_role:
+        name: metrics-server
 
     - name: Install Ingress Controller
       include_role:
