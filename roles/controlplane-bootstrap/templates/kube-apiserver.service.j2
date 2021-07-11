@@ -39,12 +39,7 @@ ExecStart=/usr/local/bin/kube-apiserver \
   --requestheader-username-headers=X-Remote-User \
   --proxy-client-cert-file=/var/lib/kubernetes/front-proxy.pem \
   --proxy-client-key-file=/var/lib/kubernetes/front-proxy-key.pem \
-{% if inventory_hostname not in groups['k8s_workers'] %}
-  --enable-aggregator-routing=true \
   --v=2 
-{% else %}  
-  --v=2 
-{% endif %}  
 Restart=on-failure
 RestartSec=5
 

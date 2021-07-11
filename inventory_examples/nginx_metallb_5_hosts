@@ -1,4 +1,6 @@
 [all:vars]
+# Set taint_master_nodes=yes, when master and worker nodes are separated
+taint_master_nodes=yes
 # cni could be calico (works) or flannel (doesn't work)
 cni=calico
 # loadbalancer could be metallb or octavia (openstack. doesn't work yet)
@@ -28,3 +30,6 @@ k8s_masters
 [k8s_workers]
 k8s-worker-1 ansible_host=192.168.70.21
 k8s-worker-2 ansible_host=192.168.70.22
+
+[k8s_workers:children]
+k8s_masters

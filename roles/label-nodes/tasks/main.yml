@@ -1,0 +1,16 @@
+---
+- name: Copy taint and label manifests
+  template:
+    src: "{{ item }}.j2"
+    dest: "/var/lib/kubernetes/{{ item }}"
+  loop:
+    - taint-master-node.yaml
+    # - label-worker-node.yaml
+
+- name: Taint and label nodes
+  k8s:
+    state: present
+    src: "/var/lib/kubernetes/{{ item }}"
+  loop:
+    - taint-master-node.yaml
+    # - label-worker-node.yaml

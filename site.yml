@@ -41,6 +41,11 @@
       include_role:
         name: rbac-for-kubelet
 
+    - name: Taint and label cluster nodes
+      include_role:
+        name: label-nodes
+      when: taint_master_nodes | bool
+
     - name: Install CoreDNS
       include_role:
         name: coredns

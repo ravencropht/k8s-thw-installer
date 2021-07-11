@@ -1,0 +1,9 @@
+{% for not (host in groups['k8s_masters']) %}
+---
+apiVersion: v1
+kind: Node
+metadata:
+  labels:
+    node-role.kubernetes.io/worker: worker
+  name: {{ inventory_hostname }}
+{% endfor %}
