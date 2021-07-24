@@ -1,4 +1,6 @@
 [all:vars]
+# loadbalancer address for kube-apiserver
+k8s_loadbalancer=192.168.70.1
 # cni could be calico (works) or flannel (doesn't work)
 cni=calico
 # loadbalancer could be metallb or octavia (openstack. doesn't work yet)

@@ -1,4 +1,6 @@
 [all:vars]
+# loadbalancer address for kube-apiserver
+k8s_loadbalancer=192.168.70.1
 # Set taint_master_nodes=yes, when master and worker nodes are separated
 taint_master_nodes=yes
 # cni could be calico (works) or flannel (doesn't work)
