@@ -4,6 +4,13 @@ Not recommended for production usage.
 ```
 I make this installer just for fun.
 
+## TODO
+- add_controlplane_node playbook
+- add_worker_node playbook
+- update certs playbook
+- openstack loadbalancer
+- tests
+
 ## Prerequisites
 - Baremetal or virtual nodes. You may create nodes with vagrantfiles from inventory_examples catalog.
 - Loadbalancer for kube-apiserver. You may use haproxy with example config from inventory_examples catalog.
@@ -36,10 +43,3 @@ metallb_pool              |192.168.70.50-192.168.70.100 | Pool of ip addresses f
 install_ingress_controller|true                         |Set `true` to install ingress controller
 ingress_controller        |        |Ingress controller you want to install. For now only `nginx` is supported                   
 nginx_ingress_provider    |        |nginx_ingress_provider could be baremetal (nodeport) or cloud. Nginx specific variable
-
-## TODO
-- add_controlplane_node playbook
-- add_worker_node playbook
-- update certs playbook
-- openstack loadbalancer
-- tests
