@@ -15,11 +15,16 @@ I make this installer just for fun.
 - Baremetal or virtual nodes. You may create nodes with vagrantfiles from inventory_examples catalog.
 - Loadbalancer for kube-apiserver. You may use haproxy with example config from inventory_examples catalog.
 - Ansible >= 2.9
+- Ansible Kubernetes collection (`ansible-galaxy collection install community.kubernetes`)
 
 
 ## How to install k8s cluster
 - Create inventory. You can use one from inventory_examples catalog.
-- Run: ansible-playbook -i <inventory_file> site.yml
+- Run: `ansible-playbook -i <inventory_file> site.yml`
+
+## How to add worker node
+- Add worker node to inventory
+- Run: `ansible-playbook -i <inventory_file> site.yml`
 
 ## Variables
 Name                      |Default                      | Description
