@@ -6,7 +6,6 @@ I make this installer just for fun.
 
 ## TODO
 - add_controlplane_node playbook
-- add_worker_node playbook
 - update certs playbook
 - openstack loadbalancer
 - tests
