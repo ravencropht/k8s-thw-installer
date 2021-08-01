@@ -1,0 +1,51 @@
+- hosts: localhost
+  become: yes
+  roles:
+    - cfssl
+    - kubectl
+    - ca-gen
+    - encryption-config-gen
+    - admin-kubeconfig-gen
+    - controlplane-kubeconfigs-gen
+    - etcd-certs-gen
+    - fetch-controlplane-configs
+
+- hosts: k8s_masters[0]
+  become: yes
+  roles:
+    - name: etcd-add-member
+      when: new_controlplane_node is defined
+
+- hosts: k8s_masters
+  become: yes
+  roles:
+    - etc-hosts-config
+    - copy-controlplane-configs
+    - etcd-bootstrap
+    - controlplane-bootstrap
+    - python-packages
+    - kubectl
+
+- hosts: k8s_workers
+  become: yes
+  vars:
+    force_cert_gen: true
+  roles:
+    - etc-hosts-config
+    - cfssl
+    - crictl
+    - runc
+    - cni-plugins
+    - containerd
+    - kubectl
+    - worker-kubeconfigs-gen
+    - worker-bootstrap
+ 
+- hosts: k8s_masters[0]
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Taint and label cluster nodes
+      include_role:
+        name: label-nodes
+      when: taint_master_nodes | bool

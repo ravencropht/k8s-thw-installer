@@ -58,11 +58,6 @@
     - kube-proxy
     - kubelet
 
-# - name: Copy 10-bridge.conf
-#   template:
-#     src: 10-bridge.conf.j2
-#     dest: /etc/cni/net.d/10-bridge.conf
-
 - name: Copy kubelet config
   template:
     src: kubelet-config.yaml.j2
@@ -86,6 +81,17 @@
     src: kube-proxy.service
     dest: /etc/systemd/system/kube-proxy.service
   notify: Restart kube-proxy
+
+- name: Restart worker services
+  systemd: 
+    name: "{{ item }}"
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+  loop:
+    - kubelet
+    - kube-proxy
+  when: force_cert_gen
 
 - name: Start worker services
   systemd: 

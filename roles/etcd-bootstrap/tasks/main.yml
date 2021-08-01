@@ -16,6 +16,7 @@
     - etcd-key.pem
     - etcd.pem
     - ca.pem
+  register: etcd_copy_cert
 
 # Download ETCD
 - name: Check /usr/local/bin/etcd
@@ -56,11 +57,20 @@
   template:
     src: etcd.service.j2
     dest: /etc/systemd/system/etcd.service
-  notify: Restart etcd
+  register: etcd_systemd
 
-- name: Start etcd
+- name: Start etcd on initial nodes
   systemd:
     name: etcd
-    state: started
+    state: restarted
     enabled: yes
     daemon_reload: yes
+  when: (etcd_copy_cert is changed and etcd_initial_cluster_state == 'new') or (etcd_systemd is changed and etcd_initial_cluster_state == 'new')
+    
+- name: Start etcd on other nodes
+  systemd:
+    name: etcd
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+  when: (etcd_copy_cert is changed and etcd_initial_cluster_state == 'existing') or (etcd_systemd is changed and etcd_initial_cluster_state == 'existing')

@@ -1,0 +1,4 @@
+---
+- name: Add member in existing cluster
+  command: "etcdctl member add {{ new_controlplane_node }} --peer-urls=https://{{ hostvars[new_controlplane_node]['ansible_host'] }}:2380 --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/etcd.pem --key=/etc/etcd/etcd-key.pem"
+  # command: "etcdctl member add {{ inventory_hostname }} --peer-urls=https://{{ ansible_host }}:2380 --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/etcd.pem --key=/etc/etcd/etcd-key.pem"

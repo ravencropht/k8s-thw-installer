@@ -1,2 +1,3 @@
 etcd_version: 3.4.15
 etcd_upgrade: false
+etcd_initial_cluster_state: new
